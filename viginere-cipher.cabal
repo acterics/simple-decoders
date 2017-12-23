@@ -34,7 +34,9 @@ library
       ,uulib
       
   exposed-modules:
-      Lib
+       Lib
+      ,ViginereDecoder
+      ,CesarDecoder
   default-language: Haskell2010
 
 executable viginere-cipher-exe
