@@ -15,20 +15,20 @@ getKeys = readFile "res/viginere/keys.data" >>= return . splitOn "\n" . normaliz
 decodeViginere :: IO [String]
 decodeViginere = getEncoded "res/viginere/encoded.data" >>= 
     \encoded -> getKeys >>= 
-        \keys -> getKeyMap "res/viginere/key-map.data" >>= 
-            \keyMap -> decodeAll encoded keys keyMap where 
+        \keys -> getAlphabet "res/viginere/key-map.data" >>= 
+            \alphabet -> decodeAll encoded keys alphabet where 
                 
 
-decodeAll :: [Char] -> Keys -> KeyMap -> IO [String]
-decodeAll encoded keys keyMap = 
+decodeAll :: [Char] -> Keys -> Alphabet -> IO [String]
+decodeAll encoded keys alphabet = 
     return $ decodeWithDenormalizing keys where
-    decodeWithKey key = map (chr . fromKeyMap) (zip (map ord encoded) (cycle $ map ord key))
-    fromKeyMap (encode, key) = getKeyMapValue (mod ((getKeyMapPosition encode keyMap) - (getKeyMapPosition key keyMap)) (length keyMap)) keyMap
+    decodeWithKey key = map (chr . fromalphabet) (zip (map ord encoded) (cycle $ map ord key))
+    fromalphabet (encode, key) = getAlphabetValue (mod ((getAlphabetPosition encode alphabet) - (getAlphabetPosition key alphabet)) (length alphabet)) alphabet
     decodeWithDenormalizing = map (denormalize . decodeWithKey)
 
 
     -- Utils for ligging
-    logKeyMap = logMap $ map mapKeyEntry keyMap
+    logalphabet = logMap $ map mapKeyEntry alphabet
     logMap (x:xs) = logMapEntry x >> logMap xs
     logMap [] = putStrLn "#########"
     logMapEntry (position, char) = putStr ("(" ++ show position ++ ": ") >> putDoc char >> putStrLn ")"

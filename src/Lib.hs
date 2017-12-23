@@ -4,15 +4,15 @@ import Data.List.Split
 import Data.String.Utils
 import Data.Char 
 
-type KeyMap = [(Int, Int)]
+type Alphabet = [(Int, Int)]
 
 getEncoded :: String -> IO String
 getEncoded encodedPath = readFile encodedPath >>= return .normalizeComa . normalizeHyphen
 
-getKeyMap :: String -> IO KeyMap
-getKeyMap keyMapPath = readFile keyMapPath >>= return . splitFile . normalizeKeyMapComa . normalizeKeyMapHyphen
+getAlphabet :: String -> IO Alphabet
+getAlphabet alphabetPath = readFile alphabetPath >>= return . splitFile . normalizeAlphabetComa . normalizeAlphabetHyphen
 
-splitFile :: String -> KeyMap
+splitFile :: String -> Alphabet
 splitFile file = filter filterError $ map (toCortege . splitOn "-") $ splitOn "," file where 
     toCortege [_, []] = (-1, 0)
     toCortege [code, value] = (read (lstrip code), ord $ head value)
@@ -26,15 +26,15 @@ findEntry predicate (x:xs)
         | otherwise = findEntry (predicate) xs
 findEntry _ _ = (-1, -1)
 
-getKeyMapValue :: Int -> KeyMap -> Int
-getKeyMapValue position = snd . findEntry (\(first, _) -> first == position)
+getAlphabetValue :: Int -> Alphabet -> Int
+getAlphabetValue position = snd . findEntry (\(first, _) -> first == position)
 
-getKeyMapPosition :: Int -> KeyMap -> Int
-getKeyMapPosition value = fst . findEntry (\(_, second) -> second == value)
+getAlphabetPosition :: Int -> Alphabet -> Int
+getAlphabetPosition value = fst . findEntry (\(_, second) -> second == value)
 
 
-normalizeKeyMapComa :: String -> String
-normalizeKeyMapComa = replace ",," "#,"
+normalizeAlphabetComa :: String -> String
+normalizeAlphabetComa = replace ",," "#,"
 
 normalizeComa :: String -> String
 normalizeComa = replace "," "#"
@@ -42,8 +42,8 @@ normalizeComa = replace "," "#"
 normalizeHyphen :: String -> String
 normalizeHyphen = replace "-" "$"
 
-normalizeKeyMapHyphen :: String -> String
-normalizeKeyMapHyphen = replace "--" "-$"
+normalizeAlphabetHyphen :: String -> String
+normalizeAlphabetHyphen = replace "--" "-$"
 
 denormalizeComa :: String -> String
 denormalizeComa = replace "#" ","

@@ -5,17 +5,17 @@ import Data.Char
 
 decodeCesar :: IO [String]
 decodeCesar = getEncoded "res/cesar/encoded.data" >>= 
-    \encoded -> getKeyMap "res/cesar/key-map.data" >>=
-        \keyMap -> decodeAll encoded keyMap
+    \encoded -> getAlphabet "res/cesar/key-map.data" >>=
+        \alphabet -> decodeAll encoded alphabet
 
 
-decodeAll :: String -> KeyMap -> IO [String]            
-decodeAll encoded keyMap = return $ map showIndex $ zip indexes $ map (denormalize . decodeWithKey) indexes where
+decodeAll :: String -> Alphabet -> IO [String]            
+decodeAll encoded alphabet = return $ map showIndex $ zip indexes $ map (denormalize . decodeWithKey) indexes where
     decodeWithKey key = map ((decodeShifted key) .ord ) encoded
-    decodeShifted key charcter  = chr (getKeyMapValue (mod ((getKeyMapPosition charcter keyMap) - key) (length keyMap)) keyMap)
-    indexes = [0..((length keyMap) - 1)]
+    decodeShifted key charcter  = chr (getAlphabetValue (mod ((getAlphabetPosition charcter alphabet) - key) (length alphabet)) alphabet)
+    indexes = [0..((length alphabet) - 1)]
     showIndex (index, value) = foldl (++) "" [
         (show index), ": ",
-        [(chr $ getKeyMapValue index keyMap)], ": ", 
+        [(chr $ getAlphabetValue index alphabet)], ": ", 
         (value)
         ]
