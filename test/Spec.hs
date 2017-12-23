@@ -6,7 +6,7 @@ import CesarDecoder
 
 main :: IO ()
 main = do 
-    -- showDecodedViginere 
+    showDecodedViginere 
     showDecodedCesar
     where 
     showDecodedViginere = decodeViginere >>= putDocList . (map pretty)
