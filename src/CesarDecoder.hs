@@ -19,3 +19,5 @@ decodeAll encoded alphabet = return $ map showIndex $ zip indexes $ map (denorma
         [(chr $ getAlphabetValue index alphabet)], ": ", 
         (value)
         ]
+
+        
