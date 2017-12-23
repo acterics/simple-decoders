@@ -28,9 +28,13 @@ library
   hs-source-dirs:
       src
   build-depends:
-      base >= 4.7 && < 5
+       base >= 4.7 && < 5
+      ,split
+      ,MissingH
+      ,utf8-string
+      ,uulib
+      
   exposed-modules:
-      KeyMapParser
       Lib
   default-language: Haskell2010
 
@@ -54,4 +58,8 @@ test-suite viginere-cipher-test
       base >= 4.7 && < 5
     , viginere-cipher
     , hspec
+    , bytestring
+    , text-icu
+    , text
+    , uulib
   default-language: Haskell2010

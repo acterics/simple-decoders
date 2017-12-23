@@ -3,4 +3,5 @@ extra-package-dbs: []
 packages:
 - .
 extra-deps:
+ - uulib-0.9.22
 resolver: lts-9.15
