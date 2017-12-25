@@ -15,15 +15,15 @@ getKeys = readFile "res/viginere/keys.data" >>= return . splitOn "\n" . normaliz
 decodeViginere :: IO [String]
 decodeViginere = getEncoded "res/viginere/encoded.data" >>= 
     \encoded -> getKeys >>= 
-        \keys -> getAlphabet "res/viginere/key-map.data" >>= 
+        \keys -> getAlphabet "res/viginere/alphabet.data" >>= 
             \alphabet -> decodeAll encoded keys alphabet where 
                 
 
 decodeAll :: [Char] -> Keys -> Alphabet -> IO [String]
 decodeAll encoded keys alphabet = 
     return $ decodeWithDenormalizing keys where
-    decodeWithKey key = map (chr . fromalphabet) (zip (map ord encoded) (cycle $ map ord key))
-    fromalphabet (encode, key) = getAlphabetValue (mod ((getAlphabetPosition encode alphabet) - (getAlphabetPosition key alphabet)) (length alphabet)) alphabet
+    decodeWithKey key = key ++ ": " ++ map (chr . fromalphabet) (zip (map ord encoded) (cycle $ map ord key))
+    fromalphabet (encode, key) = valueOf (mod ((indexOf encode alphabet) - (indexOf key alphabet)) (length alphabet)) alphabet
     decodeWithDenormalizing = map (denormalize . decodeWithKey)
 
 

@@ -6,8 +6,12 @@ import Data.Char
 
 type Alphabet = [(Int, Int)]
 
+columnLength :: Int
+columnLength = 5
+
 getEncoded :: String -> IO String
 getEncoded encodedPath = readFile encodedPath >>= return .normalizeComa . normalizeHyphen
+
 
 getAlphabet :: String -> IO Alphabet
 getAlphabet alphabetPath = readFile alphabetPath >>= return . splitFile . normalizeAlphabetComa . normalizeAlphabetHyphen
@@ -26,11 +30,11 @@ findEntry predicate (x:xs)
         | otherwise = findEntry (predicate) xs
 findEntry _ _ = (-1, -1)
 
-getAlphabetValue :: Int -> Alphabet -> Int
-getAlphabetValue position = snd . findEntry (\(first, _) -> first == position)
+valueOf :: Int -> [(Int, Int)] -> Int
+valueOf position = snd . findEntry (\(first, _) -> first == position)
 
-getAlphabetPosition :: Int -> Alphabet -> Int
-getAlphabetPosition value = fst . findEntry (\(_, second) -> second == value)
+indexOf :: Int -> [(Int, Int)] -> Int
+indexOf value = fst . findEntry (\(_, second) -> second == value)
 
 
 normalizeAlphabetComa :: String -> String
@@ -53,3 +57,11 @@ denormalizeHyphen = replace "$" "-"
 
 denormalize :: String -> String
 denormalize = (replace "#" ",") . (replace "$" "-")
+
+getSpaces :: String -> String
+getSpaces input = foldl add "" [0..getSpacesCount input] where
+    add spaces _ = spaces ++ " "
+    getSpacesCount = (-) columnLength . length
+
+getFieldWithSpaces :: String -> String
+getFieldWithSpaces input = input ++ getSpaces input
